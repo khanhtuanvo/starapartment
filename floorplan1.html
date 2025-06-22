@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Room</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #7a8b8f;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            background-color: #5d6c70;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            max-width: 300px;
+        }
+        
+        .logo h1 {
+            color: #4a6171;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #4a6171;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #7a8b8f;
+        }
+        
+        .nav-links a:hover::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #4a6171;
+            bottom: -5px;
+            left: 0;
+        }
+        
+        /* Phone container styles */
+        .phone-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .call-now {
+            color: #4a6171;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .phone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a6171;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .phone-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #4a6171;
+        }
+
+        /* Hero Section Styles */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        
+        .slides-container {
+            display: flex;
+            width: 1200%; /* 25 slides × 100% */
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+            will-change: transform; /* Optimize for smooth animations */
+        }
+
+        .slide {
+            width: 8.333%; /* 100% ÷ 25 slides */
+            height: 100%;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* .slider-viewport {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        } */
+
+        /* Navigation arrows */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(74, 97, 113, 0.8);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(74, 97, 113, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.prev {
+            left: 20px;
+        }
+
+        .nav-arrow.next {
+            right: 20px;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(74, 97, 113, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* Hero Info Panel */
+        .hero-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(50, 50, 50, 0.3));
+            color: white;
+            padding: 15px 20px; /* Reduced from 20px 30px */
+            display: flex;
+            align-items: flex-end;
+            gap: 20px; /* Reduced from 30px */
+            z-index: 10;
+        }
+
+        .info-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-section {
+            flex: 0 0 280px;
+            position: relative;
+        }
+
+        .apartment-type {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .apartment-features {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .price-section {
+            margin-bottom: 12px;
+        }
+
+        .price-label {
+            font-size: 1rem;
+            color: white;
+            margin-bottom: 3px;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #7a8b8f;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background-color: #7a8b8f;
+            border: 2px solid #7a8b8f;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+        .video-overlay:not(.hidden) ~ .control-bar {
+            transform: translateY(100%) !important;
+        }
+        .video-overlay:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .video-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-button {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+
+        .play-button:hover {
+            background: white;
+            transform: scale(1.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .play-button svg {
+            margin-left: 4px; /* Center the play icon */
+            width: 24px;
+            height: 24px;
+        }
+
+        .control-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 20px 15px 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 6;
+        }
+
+        .video-container:hover .control-bar.video-playing {
+            transform: translateY(0);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #7a8b8f;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s ease;
+            position: relative;
+        }
+
+        .progress-handle {
+            position: absolute;
+            top: 50%;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: #7a8b8f;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .progress-container:hover .progress-handle {
+            opacity: 1;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+        }
+
+        .controls-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .control-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .time-display {
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            color: white;
+            margin: 0 8px;
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #7a8b8f;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #7a8b8f;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .fullscreen-btn {
+            margin-left: 4px;
+        }
+
+        .contact-info {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .contact-phone {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #7a8b8f;
+        }
+
+
+        /* Floorplan Details Section */
+        .floorplan-section {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .floorplan-content {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .floorplan-image {
+            flex: 0 0 400px;
+            height: 100%;
+        }
+
+        .floorplan-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .floorplan-details {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .section-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .details-table {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-cell {
+            display: flex;
+            align-items: center;
+        }
+
+        .label-cell {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .value-cell {
+            color: #333;
+            font-size: 0.95rem;
+        }
+        /* Auto-slide functionality */
+        /* .hero-slider.auto-play .slides-container {
+            animation: slideShow 50s infinite linear;
+        } */
+        /* Floorplan Description Section */
+        .floorplan-description {
+            padding: 40px 0;
+            background-color: #ffffff;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .description-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .description-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .description-header h2 {
+            color: #4a6171;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .description-text {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+        #pet {
+            background-color: #f8f9fa;
+        }
+        /* Amenities Section Styles - Add this to your existing CSS */
+        .amenities-section {
+            padding: 60px 0;
+            background-color: #ffffff;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .amenities-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .amenities-content .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .amenities-content .section-header h2 {
+            color: #4a6171;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .availability-note {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px 30px;
+            color: #666;
+        }
+
+        .amenity-item {
+            font-size: 1rem;
+            line-height: 1.4;
+            padding: 8px 0;
+        }
+        /* Appliances Section Styles */
+        .appliances-section {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .appliances-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .appliances-content .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .appliances-content .section-header h2 {
+            color: #4a6171;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .appliances-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+            color: #666;
+        }
+
+        .appliance-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .appliance-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #4a6171;
+        }
+
+        .appliance-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .appliance-item span {
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        /* Utilities Section Styles */
+        .utilities-section {
+            padding: 60px 0;
+            background-color: #ffffff;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .utilities-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .utilities-content .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .utilities-content .section-header h2 {
+            color: #4a6171;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .utilities-tabs {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 24px;
+            background-color: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active {
+            background-color: #4a6171;
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+
+        .utilities-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+            color: #666;
+        }
+
+        .utility-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .utility-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            color: #4a6171;
+            transition: all 0.2s ease;
+        }
+
+        .utility-icon:hover {
+            background-color: #4a6171;
+            color: white;
+            border-color: #4a6171;
+        }
+
+        .utility-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .utility-item span {
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        /*Footer section*/
+
+        footer {
+            background-color: #4a6171;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-meta {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+        }
+        
+        .footer-logos {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-logo {
+            height: 30px;
+        }
+
+        /*Social media*/
+        .social-icons-fixed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .social-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            color: white;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .zalo-icon {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);  
+        }
+
+        .facebook-icon {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+
+        .social-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        /* Language Switcher Styles - Add to existing CSS */
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px;
+        }
+
+        .language-btn {
+            padding: 5px 10px;
+            border: 1px solid #4a6171;
+            background-color: transparent;
+            color: #4a6171;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .language-btn:hover {
+            background-color: #4a6171;
+            color: white;
+        }
+
+        .language-btn.active {
+            background-color: #4a6171;
+            color: white;
+        }
+
+        @keyframes slideShow {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-96%); } /* -96% = -(24/25 * 100%) */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-info {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .video-section {
+                flex: none;
+            }
+
+            .apartment-type {
+                font-size: 1.6rem;
+            }
+
+            .apartment-features {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-arrow {
+                width: 40px;
+                height: 40px;
+            }
+
+            .nav-arrow.prev {
+                left: 10px;
+            }
+
+            .nav-arrow.next {
+                right: 10px;
+            }
+
+            .play-button {
+                width: 50px;
+                height: 50px;
+            }
+
+            .play-button svg {
+                width: 20px;
+                height: 20px;
+            }
+            .floorplan-content {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .floorplan-image {
+                flex: none;
+            }
+            
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .table-cell {
+                padding: 4px 0;
+            }
+            
+            .label-cell {
+                font-weight: 700;
+                margin-bottom: 2px;
+            }.floorplan-description {
+                padding: 30px 0;
+            }
+            
+            .description-header h2 {
+                font-size: 1.6rem;
+            }
+            
+            .description-text {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            .appliances-grid,
+            .utilities-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .utilities-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                text-align: center;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .social-icons-fixed {
+                bottom: 15px;
+                right: 15px;
+                gap: 12px;
+            }
+            
+            .social-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .social-icon svg {
+                width: 25px;
+                height: 25px;
+            }
+            .language-switcher {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+            .hero-info {
+                padding: 8px;
+            }
+
+            .apartment-type {
+                font-size: 1.4rem;
+            }
+
+            .feature {
+                font-size: 0.8rem;
+            }
+
+            .price {
+                font-size: 1rem;
+            }
+            .appliances-grid,
+            .utilities-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .appliance-icon,
+            .utility-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .appliance-icon svg,
+            .utility-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="home.html#"><h1 data-en="STAR APARTMENT" data-vi="STAR APARTMENT">STAR APARTMENT</h1></a>
+                </div>
+                <nav class="nav-links">
+                    <a href="home.html#floorplansection" data-en="Floorplans" data-vi="Mặt bằng">Floorplans</a>
+                    <a href="home.html#contactsection" data-en="Contact" data-vi="Liên hệ">Contact</a>
+                </nav>
+                <div style="display: flex; align-items: center;">
+                    <div class="language-switcher">
+                        <button class="language-btn active" data-lang="en">English</button>
+                        <button class="language-btn" data-lang="vi" onclick="window.location.href='floorplan1vn.html'">Tiếng Việt</button>
+                    </div>
+                    <div class="phone-container">
+                        <span class="call-now" data-en="Call Now" data-vi="Gọi ngay">Call Now</span>
+                        <a href="tel:0905 107 777" class="phone">
+                            <div class="phone-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
+                                </svg>
+                            </div>
+                            0905 107 777
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-slider" id="heroSlider">
+            <div class="slides-container" id="slidesContainer">
+                <!-- 25 background slides with apartment images -->
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc1.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc2.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc3.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc4.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc5.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc6.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc7.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc8.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc9.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc10.jpg')"></div>
+                <div class="slide" style="background-image: url('img/phongtruoc/truoc11.jpg')"></div>
+                <div class="slide" style="background-image: url('img/sodo2.png')"></div>
+            </div>
+
+            <!-- Navigation arrows -->
+            <button class="nav-arrow prev" onclick="changeSlide(-1)" aria-label="Previous slide">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+            </button>
+            <button class="nav-arrow next" onclick="changeSlide(1)" aria-label="Next slide">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+            </button>
+
+            <!-- Slide counter -->
+            <div class="slide-counter">
+                <span id="currentSlide">1</span> of <span id="totalSlides">12</span>
+            </div>
+        </div>
+
+        <div class="hero-info">
+            <div class="info-content">
+                <h1 class="apartment-type">Diamond Room</h1>
+                
+                <div class="apartment-features">
+                    <div class="feature">
+                        <!-- Bed icon (1 BED) -->
+                        <svg class="feature-icon" viewBox="0 0 42.64 32.45" fill="currentColor" stroke="none">
+                            <g>
+                                <rect class="bedSvgRect" x="9.15" y="7.57" width="10.67" height="6.71"></rect>
+                                <rect class="bedSvgRect" x="22.87" y="7.57" width="10.67" height="6.71"></rect>
+                                <path class="bedSvgPath" d="M36.59,17.2H6.1A6.1,6.1,0,0,0,0,23.3v9.15H3v-3H39.64v3h3V23.3A6.1,6.1,0,0,0,36.59,17.2Z"></path>
+                                <polygon class="bedSvgPoly" points="36.59 0 36.59 1.52 6.1 1.52 6.1 0 4.57 0 4.57 17.7 6.1 17.62 6.1 3.05 36.59 3.05 36.59 17.53 38.12 17.7 38.12 0 36.59 0"></polygon>
+                            </g>
+                        </svg>
+                        <span>1 BED</span>
+                    </div>
+                    <div class="feature">
+                        <!-- Bath/Shower icon (1 BATH) -->
+                        <svg fill="#ffffff" width="50px" height="50px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" id="bathtub" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" stroke="#ffffff" stroke-width="8.704"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="bathtub_1_"> <path d="M440.908,266.62h-3.936V135.815l-0.061-3.601h-0.236c-3.348-36.628-33.963-64.836-71.152-64.836 c-28.881,0-55.197,17.775-66.117,44.426c-4.104,0.084-8.193,0.95-12.082,2.607c-7.99,3.405-14.176,9.718-17.42,17.78l-0.178,0.444 c-0.938,2.329-0.912,4.885,0.072,7.194c0.984,2.311,2.809,4.099,5.139,5.036l42.889,17.257c1.145,0.461,2.33,0.679,3.494,0.679 c3.727,0,7.262-2.229,8.736-5.895l0.18-0.446c3.242-8.058,3.152-16.896-0.254-24.885c-1.527-3.587-3.646-6.807-6.242-9.563 c6.832-16.972,23.363-28.235,41.783-28.235c24.84,0,45.049,20.208,45.049,45.048V266.62H201.26 c-1.885-3.537-5.608-5.952-9.889-5.952h-49.6c-4.279,0-8.002,2.415-9.887,5.952h-60.78c-3.631,0-7.055,1.415-9.649,3.993 c-2.575,2.576-3.995,5.998-3.995,9.639c0,7.517,6.121,13.633,13.645,13.633h9.601v118.367c0,9.138,7.438,16.572,16.583,16.572 h13.284v9.994c0,3.199,2.603,5.803,5.802,5.803h11.391c3.199,0,5.802-2.604,5.802-5.803v-9.994h252.205v9.994 c0,3.199,2.604,5.803,5.803,5.803h11.391c3.199,0,5.803-2.604,5.803-5.803v-9.994h11.775c9.145,0,16.586-7.435,16.586-16.572 V293.885h3.779c3.639,0,7.061-1.42,9.639-3.996c2.574-2.574,3.992-5.997,3.992-9.637 C454.539,272.735,448.426,266.62,440.908,266.62z M323.555,153.778l-0.18,0.445c-0.451,1.125-1.74,1.672-2.861,1.221 l-42.889-17.257c-0.545-0.219-0.973-0.638-1.203-1.179c-0.229-0.54-0.236-1.138-0.014-1.688l0.178-0.445 c5.211-12.95,19.99-19.247,32.934-14.035c6.273,2.523,11.189,7.339,13.84,13.561C326.01,140.62,326.08,147.501,323.555,153.778z M365.523,86.579c-20.576,0-39.119,12.121-47.539,30.601c-1.801-1.183-3.73-2.197-5.775-3.02c-1.73-0.696-3.498-1.229-5.283-1.619 c10.291-22.856,33.354-37.962,58.598-37.962c34.482,0,62.678,26.968,64.193,61.395l0.055,0.917v129.725h-12V138.827 C417.771,110.018,394.334,86.579,365.523,86.579z M137.773,271.868c0-2.206,1.794-4,3.999-4h49.6c2.206,0,4.001,1.794,4.001,4 v83.899h-57.6V271.868z M137.773,362.968h57.6v3.9c0,2.205-1.795,4-4.001,4h-49.6c-2.205,0-3.999-1.795-3.999-4V362.968z M80.706,286.684h-9.601c-3.553,0-6.444-2.885-6.444-6.432c0-1.717,0.67-3.33,1.879-4.538c1.229-1.222,2.85-1.894,4.565-1.894 h59.468v12.863H80.706z M130.573,293.885v29.783H87.905v-29.783H130.573z M126.367,437.42h-8.595v-8.595h8.595V437.42z M401.568,437.42h-8.596v-8.595h8.596V437.42z M429.928,412.252c0,5.168-4.209,9.372-9.385,9.372H97.289 c-5.174,0-9.384-4.204-9.384-9.372v-81.384h42.668v36c0,6.176,5.024,11.2,11.199,11.2h49.6c6.177,0,11.201-5.024,11.201-11.2v-36 h227.355V412.252z M429.928,323.668H202.573v-29.783h227.355V323.668z M445.455,284.798c-1.215,1.217-2.83,1.886-4.547,1.886 h-3.779H202.573V273.82h238.335c3.547,0,6.432,2.885,6.432,6.432C447.34,281.969,446.67,283.582,445.455,284.798z"></path> <rect height="43.701" transform="matrix(-0.9314 -0.364 0.364 -0.9314 477.8781 464.6737)" width="7.199" x="279.122" y="165.46"></rect> <rect height="33.5" transform="matrix(0.9314 0.3639 -0.3639 0.9314 90.9336 -95.4659)" width="7.201" x="295.235" y="176.856"></rect> <rect height="33.5" transform="matrix(-0.9314 -0.364 0.364 -0.9314 449.2144 446.7517)" width="7.199" x="263.102" y="164.3"></rect> </g> </g></svg>
+                        <span>1 BATH</span>
+                    </div>
+                    <div class="feature">
+                        <!-- Square footage icon (820 SQ FT) -->
+                        <svg width="50px" height="50px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="4.224"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><polygon points="8 20 8 44 32 56 56 44 56 20 32 8 8 20"></polygon><polyline points="56 20 32 32 8 20"></polyline><line x1="32" y1="32" x2="32" y2="56"></line></g></svg>
+                        <span>40 SQUARE METERS</span>
+                    </div>
+                </div>
+
+                <div class="price-section">
+                    <div class="price-label">Prices Starting At</div>
+                    <div class="price">7,000,000 VND</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="window.location.href='mailto:vhnamdn@gmail.com'">Email Manager</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='tel:0905107777'">Call Now</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='home.html#contactsection'">Contact</button>
+                </div>
+
+                <div class="contact-info">
+                    <div class="contact-phone">0905 107 777</div>
+                </div>
+            </div>
+
+            <div class="video-section">
+                <div class="video-container">
+                    <video id="heroVideo" poster="img/frontroom.jpg" preload="metadata">
+                        <source src="video/videophongtruoc.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+            
+                    <div class="video-overlay" id="videoOverlay">
+                        <button class="play-button" id="playButton">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+            
+                    <div class="control-bar" id="controlBar">
+                        <div class="progress-container" id="progressContainer">
+                            <div class="progress-fill" id="progressFill">
+                                <div class="progress-handle" id="progressHandle"></div>
+                            </div>
+                        </div>
+                
+                        <div class="controls-row">
+                            <div class="controls-left">
+                                <button class="control-btn" id="playPauseBtn" title="Play/Pause">
+                                    <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="5,3 19,12 5,21"></polygon>
+                                    </svg>
+                                    <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                        <rect x="6" y="4" width="4" height="16"></rect>
+                                        <rect x="14" y="4" width="4" height="16"></rect>
+                                    </svg>
+                                </button>
+                                
+                                <!-- <button class="control-btn" id="stopBtn" title="Stop">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18"></rect>
+                                    </svg>
+                                </button> -->
+                        
+                                <div class="time-display">
+                                    <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                                </div>
+                            </div>
+                    
+                            <div class="controls-right">
+                                <div class="volume-container">
+                                    <button class="control-btn" id="muteBtn" title="Mute/Unmute">
+                                        <svg id="volumeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19 11,5"></polygon>
+                                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                        </svg>
+                                        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19 11,5"></polygon>
+                                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                                        </svg>
+                                    </button>
+                                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100" title="Volume">
+                                </div>
+                        
+                                <button class="control-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     <!-- Floorplan Details Section -->
+    <section class="floorplan-section" id="floorplansection">
+        <div class="container">
+            <div class="floorplan-content">
+                <div class="floorplan-image">
+                    <img src="img/frontroom.jpg" alt="2x1 Apartment Floorplan" class="floorplan-img">
+                </div>
+                
+                <div class="floorplan-details">
+                    <div class="section-header">
+                        <h2>General</h2>
+                    </div>
+                    
+                    <div class="details-table">
+                        <div class="table-row">
+                            <div class="table-cell label-cell">Beds:</div>
+                            <div class="table-cell value-cell">1</div>
+                            <div class="table-cell label-cell">Type:</div>
+                            <div class="table-cell value-cell">Studio Apartment</div>
+                        </div>
+                        
+                        <div class="table-row">
+                            <div class="table-cell label-cell">Bathrooms:</div>
+                            <div class="table-cell value-cell">1</div>
+                            <div class="table-cell label-cell">Availability:</div>
+                            <div class="table-cell value-cell">Call For More Information</div>
+                        </div>
+                        
+                        <div class="table-row">
+                            <div class="table-cell label-cell">Rent:</div>
+                            <div class="table-cell value-cell">Prices Starting At 7,000,000 VND</div>
+                            <div class="table-cell label-cell">Lease Length:</div>
+                            <div class="table-cell value-cell">At Least 6 Months</div>
+                        </div>
+                        
+                        <div class="table-row">
+                            <div class="table-cell label-cell">Deposit:</div>
+                            <div class="table-cell value-cell">One-month Fee</div>
+                            <div class="table-cell label-cell">Room Size:</div>
+                            <div class="table-cell value-cell">40 Square Meters</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="floorplan-description">
+        <div class="container">
+            <div class="description-content">
+                <div class="description-header">
+                    <h2>Floorplan Description</h2>
+                </div>
+                
+                <div class="description-text">
+                    This is our big studio room, one bathroom floorplan with 40 square meters of living space. Please contact us for more information!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="floorplan-description" id="pet">
+        <div class="container">
+            <div class="description-content">
+                <div class="description-header">
+                    <h2>Pet</h2>
+                </div>
+                
+                <div class="description-text">
+                    Pets are not allowed
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities Section - Add this after the floorplan-description section -->
+    <section class="amenities-section">
+        <div class="container">
+            <div class="amenities-content">
+                <div class="section-header">
+                    <h2>Amenities</h2>
+                    <span class="availability-note">* Available for select units</span>
+                </div>
+                
+                <div class="amenities-grid">
+                    <div class="amenity-item">24/7-In/Out Access*</div>
+                    <div class="amenity-item">Internet Cable Ready*</div>
+                    <div class="amenity-item">Air conditioner & Fan*</div>
+                    
+                    
+                    <div class="amenity-item">Terrace View</div>
+                    <div class="amenity-item">Granite Countertops*</div>
+                    <div class="amenity-item">Modern Fixtures*</div>
+                    <div class="amenity-item">Motorbike Park*</div>
+                    
+                    <div class="amenity-item">Private Washer Per Room</div>
+                    <div class="amenity-item">On-Site Maintenance Service</div>
+                    <div class="amenity-item">Mini Area of BBQ Grills</div>
+                    
+                    <div class="amenity-item">Mini Spinning/Cycling Room</div>
+                    <div class="amenity-item">Germany Plank Flooring*</div>
+                    <div class="amenity-item">Fireproof Door with Magnetic Lock*</div>
+                    <div class="amenity-item">Xingfa Aluminum with Smart Lock*</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Appliances Section - Add this after the amenities-section -->
+    <section class="appliances-section">
+        <div class="container">
+            <div class="appliances-content">
+                <div class="section-header">
+                    <h2>Appliances</h2>
+                    <span class="availability-note">* Available for select units</span>
+                </div>
+                
+                <div class="appliances-grid">
+                    <!-- <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                <rect x="3" y="9" width="18" height="10"></rect>
+                                <line x1="9" y1="9" x2="9" y2="21"></line>
+                                <circle cx="6.5" cy="6.5" r="1.5"></circle>
+                            </svg>
+                        </div>
+                        <span>Dishwasher</span>
+                    </div> -->
+                    
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg fill="#4a6171" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M10 0C8.355469 0 7 1.355469 7 3L7 18.6875C6.941406 18.882813 6.941406 19.085938 7 19.28125L7 44C7 45.644531 8.355469 47 10 47L10 48C10 49.09375 10.90625 50 12 50L15 50C16.09375 50 17 49.09375 17 48L17 47L33 47L33 48C33 49.09375 33.90625 50 35 50L38 50C39.09375 50 40 49.09375 40 48L40 47C41.644531 47 43 45.644531 43 44L43 19.1875C43.027344 19.054688 43.027344 18.914063 43 18.78125L43 3C43 1.355469 41.644531 0 40 0 Z M 10 2L40 2C40.5625 2 41 2.4375 41 3L41 18L9 18L9 3C9 2.4375 9.4375 2 10 2 Z M 13.90625 5.96875C13.863281 5.976563 13.820313 5.988281 13.78125 6C13.316406 6.105469 12.988281 6.523438 13 7L13 14C12.996094 14.359375 13.183594 14.695313 13.496094 14.878906C13.808594 15.058594 14.191406 15.058594 14.503906 14.878906C14.816406 14.695313 15.003906 14.359375 15 14L15 7C15.011719 6.710938 14.894531 6.433594 14.6875 6.238281C14.476563 6.039063 14.191406 5.941406 13.90625 5.96875 Z M 9 20L41 20L41 44C41 44.5625 40.5625 45 40 45L10 45C9.4375 45 9 44.5625 9 44 Z M 13.90625 22.96875C13.863281 22.976563 13.820313 22.988281 13.78125 23C13.316406 23.105469 12.988281 23.523438 13 24L13 31C12.996094 31.359375 13.183594 31.695313 13.496094 31.878906C13.808594 32.058594 14.191406 32.058594 14.503906 31.878906C14.816406 31.695313 15.003906 31.359375 15 31L15 24C15.011719 23.710938 14.894531 23.433594 14.6875 23.238281C14.476563 23.039063 14.191406 22.941406 13.90625 22.96875 Z M 12 47L15 47L15 48L12 48 Z M 35 47L38 47L38 48L35 48Z"></path></g></svg>
+                        </div>
+                        <span>Refrigerator</span>
+                    </div>
+                    
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="currentColor"><path d="M2 6c0-3.31.69-4 4-4h12c3.31 0 4 .69 4 4v12c0 3.31-.69 4-4 4H6c-3.31 0-4-.69-4-4zm4 13h4m8 .009V19"/><circle cx="12" cy="10" r="4"/><path d="M15.5 10H17m-5 3.5V15m-3.5-5H7m5-3.5V5"/></g></svg>
+                        </div>
+                        <span>Stove</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg fill="#4a6171" viewBox="0 -22.55 122.88 122.88" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="enable-background:new 0 0 122.88 77.77" xml:space="preserve" stroke="#4a6171"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;}</style> <g> <path class="st0" d="M95.45,13.68h3.94c0.49,0,0.89,0.4,0.89,0.89v3c0,0.49-0.4,0.89-0.89,0.89h-3.94c-0.49,0-0.89-0.4-0.89-0.89 v-3C94.56,14.08,94.96,13.68,95.45,13.68L95.45,13.68z M24.22,75.44v1.14c0,0.65-0.53,1.18-1.18,1.18H17.2 c-0.65,0-1.18-0.53-1.18-1.18v-1.15H4.7c-1.29,0-2.47-0.53-3.32-1.38C0.53,73.21,0,72.04,0,70.74V4.7c0-1.29,0.53-2.47,1.38-3.32 C2.23,0.53,3.41,0,4.7,0h113.48c1.29,0,2.47,0.53,3.32,1.38c0.85,0.85,1.38,2.03,1.38,3.32v66.04c0,1.29-0.53,2.47-1.38,3.32 c-0.85,0.85-2.03,1.38-3.32,1.38h-10.06v1.14c0,0.65-0.53,1.18-1.18,1.18h-5.84c-0.65,0-1.18-0.53-1.18-1.18v-1.15H24.22 L24.22,75.44z M101.62,50.08c0.24,0,0.43,0.19,0.43,0.43c0,0.24-0.19,0.43-0.43,0.43c-0.24,0-0.43-0.19-0.43-0.43 C101.19,50.27,101.38,50.08,101.62,50.08L101.62,50.08z M99.43,50.34c0.23-0.06,0.47,0.08,0.53,0.31c0.06,0.23-0.08,0.47-0.31,0.53 c-0.23,0.06-0.47-0.08-0.53-0.31C99.07,50.64,99.2,50.4,99.43,50.34L99.43,50.34z M97.39,51.16c0.21-0.12,0.47-0.05,0.59,0.16 c0.12,0.21,0.05,0.47-0.16,0.59c-0.21,0.12-0.47,0.05-0.59-0.16C97.11,51.54,97.18,51.28,97.39,51.16L97.39,51.16z M95.63,52.48 c0.17-0.17,0.44-0.17,0.61,0c0.17,0.17,0.17,0.44,0,0.61c-0.17,0.17-0.44,0.17-0.61,0C95.46,52.93,95.46,52.65,95.63,52.48 L95.63,52.48z M94.27,54.21c0.12-0.21,0.38-0.28,0.59-0.16c0.21,0.12,0.28,0.39,0.16,0.59c-0.12,0.21-0.38,0.28-0.59,0.16 C94.22,54.69,94.14,54.42,94.27,54.21L94.27,54.21z M93.4,56.24c0.06-0.23,0.3-0.37,0.53-0.31c0.23,0.06,0.37,0.3,0.31,0.53 c-0.06,0.23-0.3,0.37-0.53,0.31C93.47,56.71,93.34,56.47,93.4,56.24L93.4,56.24z M109.71,56.42c0.06,0.23-0.08,0.47-0.31,0.53 c-0.23,0.06-0.47-0.08-0.53-0.31c-0.06-0.23,0.08-0.47,0.31-0.53C109.41,56.05,109.64,56.19,109.71,56.42L109.71,56.42z M108.89,54.38c0.12,0.21,0.05,0.47-0.16,0.59c-0.21,0.12-0.47,0.05-0.59-0.16c-0.12-0.21-0.05-0.47,0.16-0.59 C108.5,54.1,108.77,54.17,108.89,54.38L108.89,54.38z M107.56,52.61c0.17,0.17,0.17,0.44,0,0.61c-0.17,0.17-0.44,0.17-0.61,0 c-0.17-0.17-0.17-0.44,0-0.61C107.12,52.44,107.39,52.44,107.56,52.61L107.56,52.61z M105.83,51.25c0.21,0.12,0.28,0.38,0.16,0.59 c-0.12,0.21-0.38,0.28-0.59,0.16c-0.21-0.12-0.28-0.38-0.16-0.59C105.36,51.2,105.62,51.13,105.83,51.25L105.83,51.25z M103.8,50.39c0.23,0.06,0.37,0.3,0.31,0.53c-0.06,0.23-0.3,0.37-0.53,0.31c-0.23-0.06-0.37-0.3-0.31-0.53 C103.33,50.46,103.57,50.33,103.8,50.39L103.8,50.39z M16.4,32.11c-0.2,0.63-0.87,0.98-1.5,0.78c-0.63-0.2-0.98-0.87-0.78-1.5 c0.57-1.79,1.91-4.46,3.64-6.74c1.38-1.81,3.02-3.42,4.77-4.24c0.59-0.28,1.3-0.02,1.58,0.57c0.28,0.59,0.02,1.3-0.57,1.58 c-1.35,0.63-2.7,1.98-3.87,3.52C18.1,28.15,16.9,30.53,16.4,32.11L16.4,32.11z M90.11,6.82h23.07c0.79,0,1.5,0.32,2.02,0.84 c0.52,0.52,0.84,1.23,0.84,2.02v55.7c0,0.79-0.32,1.5-0.84,2.02c-0.52,0.52-1.23,0.84-2.02,0.84H90.11c-0.79,0-1.5-0.32-2.02-0.84 h0c-0.52-0.52-0.84-1.23-0.84-2.02V9.69c0-0.79,0.32-1.5,0.84-2.02C88.6,7.15,89.32,6.82,90.11,6.82L90.11,6.82z M113.18,9.21 H90.11c-0.13,0-0.25,0.05-0.34,0.14c-0.09,0.09-0.14,0.21-0.14,0.34v55.7c0,0.13,0.05,0.25,0.14,0.34l0,0 c0.09,0.09,0.21,0.14,0.34,0.14h23.07c0.13,0,0.25-0.05,0.34-0.14c0.09-0.09,0.14-0.21,0.14-0.34V9.69c0-0.13-0.05-0.25-0.14-0.34 C113.42,9.26,113.31,9.21,113.18,9.21L113.18,9.21z M10.49,15.11h59.88c0.66,0,1.25,0.27,1.69,0.7c0.43,0.43,0.7,1.03,0.7,1.69 v40.46c0,0.66-0.27,1.25-0.7,1.69c-0.43,0.43-1.03,0.7-1.69,0.7H10.49c-0.66,0-1.25-0.27-1.69-0.7c-0.43-0.43-0.7-1.03-0.7-1.69 V17.49c0-0.66,0.27-1.25,0.7-1.69h0C9.24,15.37,9.83,15.11,10.49,15.11L10.49,15.11z M70.37,17.49H10.49h0l0,0c0,0,0,0,0,0v40.46 c0,0,0,0,0,0c0,0,0,0,0,0h59.88c0,0,0,0,0,0c0,0,0,0,0,0L70.37,17.49C70.37,17.49,70.37,17.49,70.37,17.49 C70.37,17.49,70.37,17.49,70.37,17.49L70.37,17.49z M82.59,2.39v70.67h35.59c0.63,0,1.21-0.26,1.63-0.68 c0.42-0.42,0.68-1,0.68-1.63V4.7c0-0.64-0.26-1.21-0.68-1.63c-0.42-0.42-1-0.68-1.63-0.68H82.59L82.59,2.39z M77.79,73.06V2.39H4.7 c-0.64,0-1.21,0.26-1.63,0.68c-0.42,0.42-0.68,1-0.68,1.63v66.04c0,0.63,0.26,1.21,0.68,1.63c0.42,0.42,1,0.68,1.63,0.68H77.79 L77.79,73.06z M101.62,53c3.04,0,5.51,2.47,5.51,5.51c0,3.04-2.47,5.51-5.51,5.51c-3.04,0-5.51-2.46-5.51-5.51 C96.12,55.46,98.58,53,101.62,53L101.62,53z M95.26,33.67h12.97c0.92,0,1.67,0.75,1.67,1.67v9.02c0,0.92-0.75,1.67-1.67,1.67H95.26 c-0.92,0-1.67-0.75-1.67-1.67v-9.02C93.59,34.43,94.34,33.67,95.26,33.67L95.26,33.67z M104.1,22.45h3.94 c0.49,0,0.89,0.4,0.89,0.89v3c0,0.49-0.4,0.89-0.89,0.89h-3.94c-0.49,0-0.89-0.4-0.89-0.89v-3 C103.22,22.85,103.62,22.45,104.1,22.45L104.1,22.45z M95.45,22.45h3.94c0.49,0,0.89,0.4,0.89,0.89v3c0,0.49-0.4,0.89-0.89,0.89 h-3.94c-0.49,0-0.89-0.4-0.89-0.89v-3C94.56,22.85,94.96,22.45,95.45,22.45L95.45,22.45z M104.1,13.68h3.94 c0.49,0,0.89,0.4,0.89,0.89v3c0,0.49-0.4,0.89-0.89,0.89h-3.94c-0.49,0-0.89-0.4-0.89-0.89v-3 C103.22,14.08,103.62,13.68,104.1,13.68L104.1,13.68z"></path> </g> </g></svg> 
+                        </div>
+                        <span>Microwave</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M9 5a3 3 0 1 1 6 0h1a4 4 0 0 1 4 4h1a1 1 0 1 1 0 2h-1v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-8H3a1 1 0 1 1 0-2h1a4 4 0 0 1 4-4zm2 0h2a1 1 0 1 0-2 0M8 7a2 2 0 0 0-2 2h12a2 2 0 0 0-2-2zm10 4H6v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1zm-6 3a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-3 1a3 3 0 1 1 6 0a3 3 0 0 1-6 0"/></g></svg> 
+                        </div>
+                        <span>Cooker</span>
+                    </div>
+                    
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg fill="#4a6171" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.003 512.003" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <polygon points="348.506,167.415 163.493,167.415 11.887,236.943 500.112,236.943 "></polygon> </g> </g> <g> <g> <rect y="267.359" width="512.003" height="78.324"></rect> </g> </g> <g> <g> <rect x="180.344" y="18.604" width="151.305" height="118.394"></rect> </g> </g> <g> <g> <path d="M152.285,411.41c0-6.791,1.288-9.476,3.419-13.923c2.704-5.641,6.409-13.367,6.409-27.074h-30.417 c0,6.792-1.288,9.476-3.419,13.924c-2.705,5.641-6.409,13.366-6.409,27.073c0,13.707,3.704,21.433,6.409,27.073 c2.132,4.447,3.419,7.132,3.419,13.924c0,6.79-1.288,9.474-3.419,13.92c-2.705,5.64-6.409,13.366-6.409,27.071h30.417 c0-6.79,1.288-9.474,3.419-13.92c2.705-5.64,6.409-13.365,6.409-27.071c0-13.707-3.704-21.433-6.409-27.073 C153.572,420.887,152.285,418.202,152.285,411.41z"></path> </g> </g> <g> <g> <path d="M228.292,411.41c0-6.791,1.288-9.476,3.419-13.923c2.704-5.641,6.409-13.367,6.409-27.074h-30.417 c0,6.792-1.288,9.476-3.419,13.924c-2.705,5.641-6.409,13.366-6.409,27.073c0,13.707,3.704,21.433,6.409,27.073 c2.132,4.447,3.419,7.132,3.419,13.924c0,6.79-1.288,9.474-3.419,13.92c-2.705,5.64-6.409,13.366-6.409,27.071h30.417 c0-6.79,1.288-9.474,3.419-13.92c2.705-5.64,6.409-13.365,6.409-27.071c0-13.707-3.704-21.433-6.409-27.073 C229.579,420.887,228.292,418.202,228.292,411.41z"></path> </g> </g> <g> <g> <path d="M304.297,411.41c0-6.791,1.288-9.476,3.419-13.923c2.705-5.641,6.409-13.367,6.409-27.074h-30.417 c0,6.792-1.288,9.476-3.419,13.924c-2.705,5.641-6.409,13.366-6.409,27.073c0,13.707,3.704,21.433,6.409,27.073 c2.132,4.447,3.419,7.132,3.419,13.924c0,6.79-1.288,9.474-3.419,13.92c-2.705,5.64-6.409,13.366-6.409,27.071h30.417 c0-6.79,1.288-9.474,3.419-13.92c2.705-5.64,6.409-13.365,6.409-27.071c0-13.707-3.704-21.433-6.409-27.073 C305.584,420.887,304.297,418.202,304.297,411.41z"></path> </g> </g> <g> <g> <path d="M380.305,411.41c0-6.791,1.288-9.476,3.419-13.923c2.705-5.641,6.409-13.367,6.409-27.074h-30.417 c0,6.792-1.288,9.476-3.419,13.924c-2.705,5.641-6.409,13.366-6.409,27.073c0,13.707,3.704,21.433,6.409,27.073 c2.132,4.447,3.419,7.132,3.419,13.924c0,6.79-1.288,9.474-3.419,13.92c-2.705,5.64-6.409,13.366-6.409,27.071h30.417 c0-6.79,1.288-9.474,3.419-13.92c2.705-5.64,6.409-13.365,6.409-27.071c0-13.707-3.704-21.433-6.409-27.073 C381.591,420.887,380.305,418.202,380.305,411.41z"></path> </g> </g> </g></svg>
+                        </div>
+                        <span>Kitchen Hood</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg fill="#4a6171" height="200px" width="200px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.998 511.998" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M428.866,83.009c-3.712-3.151-9.275-2.694-12.425,1.016c-3.151,3.712-2.696,9.275,1.016,12.425 c37.811,32.097,59.341,78.696,59.071,127.847c-0.221,39.851-14.547,77.879-40.494,107.883 c8.598-21.872,12.865-44.957,12.691-68.725c-0.275-36.286-10.712-70.07-29.388-95.132c-18.139-24.34-42.952-38.732-70.555-41.138 l-4.069-66.652c15.929,3.404,31.228,9.145,45.607,17.128c1.355,0.752,2.823,1.11,4.271,1.11c3.098,0,6.104-1.637,7.714-4.537 c2.364-4.257,0.83-9.623-3.427-11.987c-17.348-9.632-35.912-16.309-55.276-19.907l-0.991-16.227 c-0.225-3.683-2.719-6.835-6.251-7.902c-80.422-24.282-165.439-24.282-245.861,0c-3.532,1.066-6.026,4.22-6.251,7.902 l-0.083,1.366L22.243,63.259c-2.057,1.188-3.547,3.156-4.133,5.457c-0.586,2.301-0.22,4.743,1.018,6.769l56.46,92.476 l-6.494,106.365c-0.296,4.859,3.403,9.039,8.262,9.336c4.857,0.287,9.04-3.403,9.336-8.262L101.338,35.51 c0.26-0.724,0.424-1.479,0.49-2.247c73.274-20.868,150.301-20.836,223.562,0.099l25.062,410.524H76.407l7.881-129.094 c0.296-4.859-3.403-9.04-8.262-9.336c-4.859-0.303-9.04,3.403-9.336,8.262l-7.946,130.169H45.133c-3.7,0-7.007,2.311-8.278,5.785 l-18.479,50.48c-0.99,2.703-0.597,5.721,1.053,8.081c1.649,2.359,4.347,3.766,7.225,3.766h282.389c4.87,0,8.816-3.947,8.816-8.816 s-3.946-8.816-8.816-8.816H39.268l12.023-32.849h324.276l12.023,32.849h-43.287c-4.87,0-8.816,3.947-8.816,8.816 s3.946,8.816,8.816,8.816h55.903c2.879,0,5.576-1.406,7.225-3.766s2.042-5.376,1.053-8.081l-18.479-50.48 c-1.272-3.475-4.578-5.785-8.278-5.785h-13.611l-18.247-298.88c26.984,3.19,44.81,19.735,55.33,33.851 c16.451,22.077,25.646,52.167,25.893,84.728c0.174,23.715-4.534,46.67-13.992,68.213c-3.273,7.429-0.823,15.762,5.959,20.265 c2.835,1.883,5.995,2.803,9.118,2.803c4.316,0,8.562-1.76,11.786-5.171c32.109-34.034,49.935-78.533,50.195-125.302 C494.458,170.019,470.659,118.487,428.866,83.009z M77.465,137.203L38.883,74.007l43.992-25.421L77.465,137.203z"></path> </g> </g> <g> <g> <path d="M213.431,86.489c-17.107,0-31.026,13.918-31.026,31.026v238.267c0,17.108,13.919,31.027,31.026,31.027 s31.026-13.919,31.026-31.027V117.515C244.457,100.407,230.538,86.489,213.431,86.489z M200.034,117.515 c0.001-7.387,6.01-13.396,13.396-13.396s13.395,6.009,13.395,13.395v18.296h-26.791V117.515z M226.826,355.781 c0,7.386-6.009,13.396-13.395,13.396s-13.396-6.01-13.396-13.396v-38.377h26.791V355.781z M226.826,299.773h-26.791V262.75h26.791 V299.773z M226.826,245.119h-26.791v-37.023h26.791V245.119z M226.826,190.465h-26.791v-37.023h26.791V190.465z"></path> </g> </g> </g></svg>
+                        </div>
+                        <span>Rapid Boil Kettle</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 8467 8467"><path fill="currentColor" d="M3314 7170c-26-42-26-47 18-146c107-237 96-480-32-755c-125-267-150-500-81-745c62-223 148-312 226-235c38 40 37 50-39 259a838 838 0 0 0 62 643c150 299 159 647 25 920c-40 78-52 91-98 96c-41 4-60-4-80-38Zm855 17c-38-38-30-77 20-200a707 707 0 0 0 50-260c10-173-6-245-103-467c-90-206-110-292-108-472c0-230 90-501 172-522c60-15 110 18 110 70c0 24-20 93-45 153c-40 98-45 129-45 307c0 190 2 204 55 322c140 316 140 312 147 514c10 215-16 344-92 485c-37 70-53 85-96 90c-30 3-60-5-70-20Zm840-2c-29-30-20-76 40-240a669 669 0 0 0 42-256c0-158-19-235-103-422a1844 1844 0 0 1-90-239a1113 1113 0 0 1 1-470c28-114 96-266 128-287a88 88 0 0 1 120 30c26 40 25 47-27 177a816 816 0 0 0 32 702a1000 1000 0 0 1 122 500a810 810 0 0 1-43 310c-53 161-95 220-158 220c-26 0-56-10-67-25ZM50 4746a181 181 0 0 1-42-70a64400 64400 0 0 1-4-1518l4-1480l55-110a544 544 0 0 1 295-278c90-33 110-33 3875-33c3766 0 3786 0 3876 33a550 550 0 0 1 295 277l54 110l5 1481c3 814 0 1497-4 1518a181 181 0 0 1-42 70c-33 33-73 33-4184 33c-4110 0-4150-6-4183-39Zm366-633c5-381 8-404 45-480a355 355 0 0 1 120-132l78-53h7160l77 53a360 360 0 0 1 116 133c37 75 40 98 44 480l6 400h130V3134c0-1490 2-1445-87-1526l-40-38l-10 115c-17 176-86 285-217 340c-54 23-443 26-3600 26c-3158 5-3546 4-3602-19c-130-54-200-163-214-339l-10-114l-40 38c-90 80-88 37-88 1525v1380h130Zm3354-877c-58-29-65-114-13-150c32-23 101-27 476-27c495 0 520 5 510 105c-9 87-40 93-510 93c-306 0-433-6-463-20Zm3200-35c-30-46-14-96 43-126c75-40 156 85 94 146c-34 35-109 24-138-20Zm431 3c-53-80 36-173 117-120c43 28 54 103 20 137s-110 24-137-17m454 1236v-74H612v148h7243Zm0-347v-91H612v182h7243Zm0-327c0-43-43-100-94-126c-26-13-989-19-3528-19s-3500 6-3527 19c-50 26-93 83-94 126v37h7243Zm-50-1946c45-45 50-57 50-173v-127H611v126c0 116 3 128 48 173l50 49h7044Z"/></svg>
+                        </div>
+                        <span>Air Conditioner</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg fill="#4a6171" height="200px" width="200px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <path d="M442.656,0H69.347C46.589,0,28.074,18.515,28.074,41.273v429.453c0,22.758,18.515,41.273,41.272,41.273h373.309 c22.756,0,41.27-18.515,41.27-41.273V41.273C483.926,18.515,465.412,0,442.656,0z M442.656,495.512H69.347 c-10.777,0-19.963-6.916-23.369-16.541h420.046C462.618,488.595,453.431,495.512,442.656,495.512z M467.438,462.482H44.562 V104.063h422.875V462.482z M197.828,66.645V38.57c0-2.692,2.274-4.967,4.967-4.967h106.408c2.692,0,4.967,2.274,4.967,4.967 v28.074c0,2.693-2.274,4.968-4.967,4.968H202.795C200.102,71.612,197.828,69.338,197.828,66.645z M467.438,87.575H313.867 c9.593-2.138,16.789-10.703,16.789-20.93V38.57c0-11.831-9.625-21.456-21.456-21.456H202.793 c-11.831,0-21.456,9.625-21.456,21.456v28.074c0,10.227,7.198,18.792,16.789,20.93H44.562V41.273 c0-13.667,11.117-24.785,24.784-24.785h373.309c13.666,0,24.782,11.119,24.782,24.785V87.575z"></path> <path d="M286.031,343.524c8.292,0,15.016-6.724,15.016-15.016c0-8.29-6.724-15.014-15.016-15.014 c-8.29,0-15.014,6.724-15.014,15.014C271.017,336.799,277.741,343.524,286.031,343.524z"></path> <circle cx="206.459" cy="301.931" r="11.56"></circle> <path d="M161.322,40.223c-6.838,0-12.384,5.544-12.384,12.385s5.546,12.386,12.384,12.386c6.844,0,12.389-5.546,12.389-12.386 C173.71,45.767,168.164,40.223,161.322,40.223z"></path> <circle cx="390.588" cy="52.608" r="12.385"></circle> <path d="M256.001,406.263c71.929,0,130.447-58.518,130.447-130.447c0-71.927-58.518-130.444-130.447-130.444 c-63.911,0-117.23,46.202-128.322,106.96h-3.839v46.971h3.84C138.771,360.06,192.09,406.263,256.001,406.263z M256.001,161.86 c62.837,0,113.958,51.12,113.958,113.956c0,62.837-51.121,113.958-113.958,113.958c-62.836,0-113.956-51.121-113.956-113.958 C142.044,212.98,193.165,161.86,256.001,161.86z"></path> <path d="M256.001,383.143c59.18,0,107.327-48.147,107.327-107.327S315.18,168.489,256.001,168.489 s-107.327,48.147-107.327,107.327S196.821,383.143,256.001,383.143z M256.001,184.978c39.95,0,73.932,25.933,86.063,61.84 c-5.75,2.191-10.968,5.551-15.379,9.959c-5.225,5.228-12.209,8.107-19.671,8.107s-14.449-2.88-19.677-8.109 c-17.279-17.279-45.393-17.278-62.674,0.001c-5.228,5.228-12.215,8.108-19.674,8.108c-7.46,0-14.449-2.88-19.679-8.111 c-4.408-4.405-9.625-7.764-15.373-9.953C182.067,210.912,216.051,184.978,256.001,184.978z M166.07,263.1 c2.799,1.332,5.361,3.115,7.582,5.335c8.343,8.342,19.472,12.938,31.337,12.938c11.864,0,22.992-4.596,31.333-12.938 c10.853-10.85,28.508-10.849,39.356-0.001c8.341,8.343,19.469,12.939,31.337,12.939s22.995-4.596,31.328-12.936 c2.223-2.221,4.787-4.004,7.588-5.337c0.585,4.157,0.908,8.399,0.908,12.716c0,50.088-40.749,90.838-90.838,90.838 c-50.089,0-90.838-40.749-90.838-90.838C165.162,271.498,165.485,267.259,166.07,263.1z"></path> <circle cx="350.679" cy="52.608" r="12.385"></circle> </g> </g> </g> </g></svg>
+                        </div>
+                        <span>Washer</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#4a6171"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>tv-solid</title> <g id="Layer_2" data-name="Layer 2"> <g id="invisible_box" data-name="invisible box"> <rect width="48" height="48" fill="none"></rect> </g> <g id="icons_Q2" data-name="icons Q2"> <path d="M44,4H4A2,2,0,0,0,2,6V34a2,2,0,0,0,2,2H22v4H13a2,2,0,0,0,0,4H35a2,2,0,0,0,0-4H26V36H44a2,2,0,0,0,2-2V6A2,2,0,0,0,44,4Z"></path> </g> </g> </g></svg>
+                        </div>
+                        <span>TV</span>
+                    </div>
+
+                    <div class="appliance-item">
+                        <div class="appliance-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14"><path fill="currentColor" fill-rule="evenodd" d="M4.233 2.753a3.922 3.922 0 0 1 5.534 0a.75.75 0 0 0 1.06-1.06a5.422 5.422 0 0 0-7.655 0a.75.75 0 1 0 1.061 1.06M6.95 6.266a.75.75 0 1 0 0-1.5a.75.75 0 0 0 0 1.5m.995-2.048c-.527-.527-1.46-.527-1.987 0a.75.75 0 1 1-1.06-1.06c1.113-1.114 2.995-1.114 4.108 0a.75.75 0 0 1-1.06 1.06ZM1.99 2.981a.75.75 0 1 0-1.447.395L1.599 7.25h1.554zm11.469.395L12.4 7.25h-1.554l1.164-4.269a.75.75 0 0 1 1.447.395ZM2.427 13.214V12.5H1.5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-.927v.714a.75.75 0 0 1-1.5 0V12.5H3.927v.714a.75.75 0 0 1-1.5 0m.25-2.867a.5.5 0 0 1 .5-.5h.478a.5.5 0 1 1 0 1h-.478a.5.5 0 0 1-.5-.5m2.89-.5a.5.5 0 1 0 0 1h.477a.5.5 0 1 0 0-1z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <span>Wifi Router</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Utilities Section - Add this after the appliances-section -->
+    <section class="utilities-section">
+        <div class="container">
+            <div class="utilities-content">
+                <div class="section-header">
+                    <h2>Utilities Paid by</h2>
+                </div>
+                
+                <div class="utilities-tabs">
+                    <button class="tab-button active" onclick="showUtilitiesTab('resident')">Resident</button>
+                    <button class="tab-button" onclick="showUtilitiesTab('management')">Management</button>
+                </div>
+                
+                <div class="utilities-grid" id="residentUtilities">
+                    <div class="utility-item">
+                        <div class="utility-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 512 512"><path fill="currentColor" d="M265.12 60.12a12 12 0 0 0-18.23 0C215.23 97.15 112 225.17 112 320c0 88.37 55.64 144 144 144s144-55.63 144-144c0-94.83-103.23-222.85-134.88-259.88M272 412a12 12 0 0 1-11.34-16a11.89 11.89 0 0 1 11.41-8A60.06 60.06 0 0 0 332 328.07a11.89 11.89 0 0 1 8-11.41A12 12 0 0 1 356 328a84.09 84.09 0 0 1-84 84"/></svg>
+                        </div>
+                        <span>Water</span>
+                    </div>
+                    
+                    <div class="utility-item">
+                        <div class="utility-icon">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4164 31H29.5837C30.0096 30.0175 30.5783 29.0337 31.1077 28.1972C31.9501 26.8663 32.8498 25.6684 33.3793 25.0221C34.7882 23.2987 35.668 21.225 35.9229 19.0407C36.1778 16.8563 35.798 14.6443 34.8245 12.6584C33.8509 10.6721 32.3213 8.98968 30.4066 7.80939C28.4915 6.62888 26.2713 6.00036 24.0019 6C21.7326 5.99964 19.5121 6.62747 17.5967 7.80738C15.6816 8.98707 14.1514 10.6691 13.1771 12.6551C12.203 14.6407 11.8225 16.8525 12.0767 19.037C12.3308 21.2216 13.2102 23.2957 14.6187 25.0197C15.1472 25.6656 16.0473 26.8635 16.8906 28.1951C17.4206 29.032 17.9901 30.0165 18.4164 31ZM34.9273 26.2885C36.5762 24.2717 37.6099 21.8396 37.9094 19.2725C38.209 16.7053 37.7621 14.1074 36.6204 11.7782C35.4787 9.44891 33.6885 7.48298 31.4561 6.10687C29.2237 4.73075 26.6398 4.00041 24.0022 4C21.3646 3.99959 18.7806 4.72911 16.5477 6.10453C14.3149 7.47995 12.524 9.44531 11.3816 11.7742C10.2391 14.1031 9.79137 16.7008 10.0901 19.2681C10.3888 21.8354 11.4217 24.2678 13.0699 26.2851C14.0324 27.4611 16.4803 30.8176 17 33H31C31.5197 30.8193 33.9648 27.4628 34.9273 26.2885Z" fill="#333333"></path> <path d="M19 21L25 12V18H29L23 27L23 21H19Z" fill="#333333"></path> <path d="M17 35H31V37H17V35Z" fill="#333333"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M29 41H19L19 42H29V41ZM17 39V42C17 43.1046 17.8954 44 19 44H29C30.1046 44 31 43.1046 31 42V39H17Z" fill="#333333"></path> </g></svg>
+                        </div>
+                        <span>Electricity</span>
+                    </div>
+                </div>
+                
+                
+                <div class="utilities-grid" id="managementUtilities" style="display: none;">
+                    <div class="utility-item">
+                        <div class="utility-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M2 12h20"></path>
+                                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
+                            </svg>
+                        </div>
+                        <span>Internet</span>
+                    </div>
+                    
+                    <div class="utility-item">
+                        <div class="utility-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#4a6171"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M14 10V17M10 10V17" stroke="#4a6171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </div>
+                        <span>Trash</span>
+                    </div>
+
+                    <div class="utility-item">
+                        <div class="utility-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#4a6171"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path fill="none" d="M0 0h24v24H0z"></path> <path d="M4 13.256V12H2v-2h6.365L11.2 8h3.491L13.6 5H11V3h4l1.092 3H20v3h-2.816l1.456 4.002a4.5 4.5 0 1 1-1.985.392L15.419 10h-.947l-1.582 5.87-.002-.001.002.006-2.925 1.064A4.5 4.5 0 1 1 4 13.256zm2-.229a4.5 4.5 0 0 1 3.281 2.033l1.957-.713L12.403 10h-.547L9 12H6v1.027zM5.5 20a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path> </g> </g></svg>
+                        </div>
+                        <span>Motorbike Park</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer (Image 1) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-links">
+                        <a href="home.html#">Home</a> |
+                        <a href="home.html#floorplansection">Floorplans</a> |
+                        <a href="home.html#contactsection">Contact</a>
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <div>Star Apartment</div>
+                        <div>65 Nguyen Thi Dinh, Son Tra District, Da Nang 550000</div>
+                        <div>0905 107 777</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="social-icons-fixed">
+    <!-- Zalo Icon -->
+        <a href="https://zalo.me/0905107777" target="_blank" class="social-icon zalo-icon" title="Contact via Zalo">
+            <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.782 0.166016H27.199C33.2653 0.166016 36.8103 1.05701 39.9572 2.74421C43.1041 4.4314 45.5875 6.89585 47.2557 10.0428C48.9429 13.1897 49.8339 16.7347 49.8339 22.801V27.1991C49.8339 33.2654 48.9429 36.8104 47.2557 39.9573C45.5685 43.1042 43.1041 45.5877 39.9572 47.2559C36.8103 48.9431 33.2653 49.8341 27.199 49.8341H22.8009C16.7346 49.8341 13.1896 48.9431 10.0427 47.2559C6.89583 45.5687 4.41243 43.1042 2.7442 39.9573C1.057 36.8104 0.166016 33.2654 0.166016 27.1991V22.801C0.166016 16.7347 1.057 13.1897 2.7442 10.0428C4.43139 6.89585 6.89583 4.41245 10.0427 2.74421C13.1707 1.05701 16.7346 0.166016 22.782 0.166016Z" fill="#0068FF"/>
+                <path opacity="0.12" fill-rule="evenodd" clip-rule="evenodd" d="M49.8336 26.4736V27.1994C49.8336 33.2657 48.9427 36.8107 47.2555 39.9576C45.5683 43.1045 43.1038 45.5879 39.9569 47.2562C36.81 48.9434 33.265 49.8344 27.1987 49.8344H22.8007C17.8369 49.8344 14.5612 49.2378 11.8104 48.0966L7.27539 43.4267L49.8336 26.4736Z" fill="#001A33"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.779 43.5892C10.1019 43.846 13.0061 43.1836 15.0682 42.1825C24.0225 47.1318 38.0197 46.8954 46.4923 41.4732C46.8209 40.9803 47.1279 40.4677 47.4128 39.9363C49.1062 36.7779 50.0004 33.22 50.0004 27.1316V22.7175C50.0004 16.629 49.1062 13.0711 47.4128 9.91273C45.7385 6.75436 43.2461 4.28093 40.0877 2.58758C36.9293 0.894239 33.3714 0 27.283 0H22.8499C17.6644 0 14.2982 0.652754 11.4699 1.89893C11.3153 2.03737 11.1636 2.17818 11.0151 2.32135C2.71734 10.3203 2.08658 27.6593 9.12279 37.0782C9.13064 37.0921 9.13933 37.1061 9.14889 37.1203C10.2334 38.7185 9.18694 41.5154 7.55068 43.1516C7.28431 43.399 7.37944 43.5512 7.779 43.5892Z" fill="white"/>
+                <path d="M20.5632 17H10.8382V19.0853H17.5869L10.9329 27.3317C10.7244 27.635 10.5728 27.9194 10.5728 28.5639V29.0947H19.748C20.203 29.0947 20.5822 28.7156 20.5822 28.2606V27.1421H13.4922L19.748 19.2938C19.8428 19.1801 20.0134 18.9716 20.0893 18.8768L20.1272 18.8199C20.4874 18.2891 20.5632 17.8341 20.5632 17.2844V17Z" fill="#0068FF"/>
+                <path d="M32.9416 29.0947H34.3255V17H32.2402V28.3933C32.2402 28.7725 32.5435 29.0947 32.9416 29.0947Z" fill="#0068FF"/>
+                <path d="M25.814 19.6924C23.1979 19.6924 21.0747 21.8156 21.0747 24.4317C21.0747 27.0478 23.1979 29.171 25.814 29.171C28.4301 29.171 30.5533 27.0478 30.5533 24.4317C30.5723 21.8156 28.4491 19.6924 25.814 19.6924ZM25.814 27.2184C24.2785 27.2184 23.0273 25.9672 23.0273 24.4317C23.0273 22.8962 24.2785 21.645 25.814 21.645C27.3495 21.645 28.6007 22.8962 28.6007 24.4317C28.6007 25.9672 27.3685 27.2184 25.814 27.2184Z" fill="#0068FF"/>
+                <path d="M40.4867 19.6162C37.8516 19.6162 35.7095 21.7584 35.7095 24.3934C35.7095 27.0285 37.8516 29.1707 40.4867 29.1707C43.1217 29.1707 45.2639 27.0285 45.2639 24.3934C45.2639 21.7584 43.1217 19.6162 40.4867 19.6162ZM40.4867 27.2181C38.9322 27.2181 37.681 25.9669 37.681 24.4124C37.681 22.8579 38.9322 21.6067 40.4867 21.6067C42.0412 21.6067 43.2924 22.8579 43.2924 24.4124C43.2924 25.9669 42.0412 27.2181 40.4867 27.2181Z" fill="#0068FF"/>
+                <path d="M29.4562 29.0944H30.5747V19.957H28.6221V28.2793C28.6221 28.7153 29.0012 29.0944 29.4562 29.0944Z" fill="#0068FF"/>
+            </svg>
+        </a>
+        
+        <!-- Facebook Icon -->
+        <a href="https://www.facebook.com/profile.php?id=61577385717469" target="_blank" class="social-icon facebook-icon" title="Follow us on Facebook">
+            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+            <svg
+            version="1.1"
+            id="svg9"
+            width="666.66669"
+            height="666.66718"
+            viewBox="0 0 666.66668 666.66717"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:svg="http://www.w3.org/2000/svg">
+            <defs
+                id="defs13">
+                <clipPath
+                clipPathUnits="userSpaceOnUse"
+                id="clipPath25">
+                <path
+                    d="M 0,700 H 700 V 0 H 0 Z"
+                    id="path23" />
+                </clipPath>
+            </defs>
+            <g
+                id="g17"
+                transform="matrix(1.3333333,0,0,-1.3333333,-133.33333,799.99999)">
+                <g
+                id="g19">
+                <g
+                    id="g21"
+                    clip-path="url(#clipPath25)">
+                    <g
+                    id="g27"
+                    transform="translate(600,350)">
+                    <path
+                        d="m 0,0 c 0,138.071 -111.929,250 -250,250 -138.071,0 -250,-111.929 -250,-250 0,-117.245 80.715,-215.622 189.606,-242.638 v 166.242 h -51.552 V 0 h 51.552 v 32.919 c 0,85.092 38.508,124.532 122.048,124.532 15.838,0 43.167,-3.105 54.347,-6.211 V 81.986 c -5.901,0.621 -16.149,0.932 -28.882,0.932 -40.993,0 -56.832,-15.528 -56.832,-55.9 V 0 h 81.659 l -14.028,-76.396 h -67.631 V -248.169 C -95.927,-233.218 0,-127.818 0,0"
+                        style="fill:#0866ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        id="path29" />
+                    </g>
+                    <g
+                    id="g31"
+                    transform="translate(447.9175,273.6036)">
+                    <path
+                        d="M 0,0 14.029,76.396 H -67.63 v 27.019 c 0,40.372 15.838,55.899 56.831,55.899 12.733,0 22.981,-0.31 28.882,-0.931 v 69.253 c -11.18,3.106 -38.509,6.212 -54.347,6.212 -83.539,0 -122.048,-39.441 -122.048,-124.533 V 76.396 h -51.552 V 0 h 51.552 v -166.242 c 19.343,-4.798 39.568,-7.362 60.394,-7.362 10.254,0 20.358,0.632 30.288,1.831 L -67.63,0 Z"
+                        style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        id="path33" />
+                    </g>
+                </g>
+                </g>
+            </g>
+            </svg>
+
+        </a>
+    </div>
+
+    <script>
+        // Slider functionality
+        let currentSlideIndex = 0;
+        const totalSlides = 12;
+        let autoSlideInterval;
+        let isAutoPlaying = true;
+        let userInteracting = false; // Flag to track user interaction
+
+        function updateSlideCounter() {
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+            document.getElementById('totalSlides').textContent = totalSlides;
+        }
+
+        function goToSlide(index) {
+            const slidesContainer = document.getElementById('slidesContainer');
+            
+            // Handle wrapping for 12 slides (indices 0-11)
+            currentSlideIndex = index;
+            if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1; // Go to slide 11
+            if (currentSlideIndex >= totalSlides) currentSlideIndex = 0; // Go to slide 0
+            
+            // Calculate translation - each slide takes up 100/12 = 8.333% width
+            const slideWidth = 100 / totalSlides;
+            const translateX = -(currentSlideIndex * slideWidth);
+            
+            slidesContainer.style.transform = `translateX(${translateX}%)`;
+            updateSlideCounter();
+        }
+
+        function changeSlide(direction) {
+            userInteracting = true; // Mark that user is interacting
+            stopAutoSlide();
+            goToSlide(currentSlideIndex + direction);
+            
+            // Set a timeout to resume auto-slide after 5 seconds of no interaction
+            setTimeout(() => {
+                if (userInteracting) {
+                    userInteracting = false;
+                    startAutoSlide();
+                }
+            }, 5000); // 5 second pause after user interaction
+        }
+
+        function startAutoSlide() {
+            if (userInteracting) return; // Don't start if user is still interacting
+            
+            stopAutoSlide();
+            autoSlideInterval = setInterval(() => {
+                if (!userInteracting) { // Only auto-advance if user isn't interacting
+                    goToSlide(currentSlideIndex + 1);
+                }
+            }, 3000);
+            
+            // Add auto-play class if element exists
+            const heroSlider = document.getElementById('heroSlider');
+            if (heroSlider) {
+                heroSlider.classList.add('auto-play');
+            }
+        }
+
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = null;
+            }
+            
+            // Remove auto-play class if element exists
+            const heroSlider = document.getElementById('heroSlider');
+            if (heroSlider) {
+                heroSlider.classList.remove('auto-play');
+            }
+        }
+       // Video player functionality
+        const video = document.getElementById('heroVideo');
+        const videoOverlay = document.getElementById('videoOverlay');
+        const playButton = document.getElementById('playButton');
+        const controlBar = document.getElementById('controlBar');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const stopBtn = document.getElementById('stopBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeSpan = document.getElementById('currentTime');
+        const durationSpan = document.getElementById('duration');
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const muteIcon = document.getElementById('muteIcon');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        let isPlaying = false;
+        let isMuted = false;
+
+        // Format time helper function
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Play button overlay click
+        videoOverlay.addEventListener('click', function() {
+            playVideo();
+        });
+
+        // Main play function
+        function playVideo() {
+            if (video.paused) {
+                video.play();
+                isPlaying = true;
+                videoOverlay.classList.add('hidden');
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                stopAutoSlide(); // Stop slider when video plays
+            } else {
+                video.pause();
+                isPlaying = false;
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        // Play/Pause button
+        playPauseBtn.addEventListener('click', function() {
+            playVideo();
+        });
+
+        // Stop button
+        // stopBtn.addEventListener('click', function() {
+        //     video.pause();
+        //     video.currentTime = 0;
+        //     isPlaying = false;
+        //     videoOverlay.classList.remove('hidden');
+        //     playIcon.style.display = 'block';
+        //     pauseIcon.style.display = 'none';
+        //     startAutoSlide(); // Restart slider when video stops
+        // });
+
+        // Video ended event
+        video.addEventListener('ended', function() {
+            isPlaying = false;
+            videoOverlay.classList.remove('hidden');
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            startAutoSlide(); // Restart slider when video ends
+        });
+
+        // Progress bar functionality
+        video.addEventListener('timeupdate', function() {
+            if (video.duration) {
+                const progress = (video.currentTime / video.duration) * 100;
+                progressFill.style.width = progress + '%';
+                currentTimeSpan.textContent = formatTime(video.currentTime);
+            }
+        });
+
+        video.addEventListener('loadedmetadata', function() {
+            durationSpan.textContent = formatTime(video.duration);
+        });
+
+        // Progress bar click
+        progressContainer.addEventListener('click', function(e) {
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const clickPercent = clickX / width;
+            
+            if (video.duration) {
+                video.currentTime = clickPercent * video.duration;
+            }
+        });
+
+        // Mute button
+        muteBtn.addEventListener('click', function() {
+            if (video.muted) {
+                video.muted = false;
+                volumeIcon.style.display = 'block';
+                muteIcon.style.display = 'none';
+                volumeSlider.value = video.volume * 100;
+            } else {
+                video.muted = true;
+                volumeIcon.style.display = 'none';
+                muteIcon.style.display = 'block';
+                volumeSlider.value = 0;
+            }
+        });
+
+        // Volume slider
+        volumeSlider.addEventListener('input', function() {
+            video.volume = volumeSlider.value / 100;
+            video.muted = false;
+            
+            if (video.volume === 0) {
+                volumeIcon.style.display = 'none';
+                muteIcon.style.display = 'block';
+            } else {
+                volumeIcon.style.display = 'block';
+                muteIcon.style.display = 'none';
+            }
+        });
+
+        // Fullscreen functionality
+        fullscreenBtn.addEventListener('click', function() {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        });
+
+        // Show/hide controls on video hover
+        function playVideo() {
+            if (video.paused) {
+                video.play();
+                isPlaying = true;
+                videoOverlay.classList.add('hidden');
+                controlBar.classList.add('video-playing'); // Add this line
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                stopAutoSlide();
+            } else {
+                video.pause();
+                isPlaying = false;
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        // Update video ended event:
+        video.addEventListener('ended', function() {
+            isPlaying = false;
+            videoOverlay.classList.remove('hidden');
+            controlBar.classList.remove('video-playing'); // Add this line
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            startAutoSlide();
+        });
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSlideCounter();
+            startAutoSlide();
+            
+            // Set initial video volume
+            video.volume = 1;
+            volumeSlider.value = 100;
+        });
+
+        // Modified hover behavior - pause auto-slide when hovering over slider
+        const heroSection = document.querySelector('.hero-section');
+        heroSection.addEventListener('mouseenter', () => {
+            userInteracting = true;
+            stopAutoSlide();
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            // Only resume auto-slide after a short delay to prevent immediate restart
+            setTimeout(() => {
+                userInteracting = false;
+                startAutoSlide();
+            }, 1000);
+        });
+
+        // Utilities tab functionality
+        function showUtilitiesTab(tabName) {
+            // Hide all utility grids
+            document.getElementById('residentUtilities').style.display = 'none';
+            document.getElementById('managementUtilities').style.display = 'none';
+            
+            // Remove active class from all buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected tab and mark button as active
+            if (tabName === 'resident') {
+                document.getElementById('residentUtilities').style.display = 'grid';
+                tabButtons[0].classList.add('active');
+            } else if (tabName === 'management') {
+                document.getElementById('managementUtilities').style.display = 'grid';
+                tabButtons[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
