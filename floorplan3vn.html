@@ -64,7 +64,7 @@
 
             <!-- Slide counter -->
             <div class="slide-counter">
-                <span id="currentSlide">1</span> of <span id="totalSlides">8</span>
+                <span id="currentSlide">1</span> of <span id="totalSlides">0</span>
             </div>
         </div>
     </section>
@@ -541,7 +541,7 @@
     <script>
         // Slider functionality
         let currentSlideIndex = 0;
-        const totalSlides = 6;
+        const totalSlides = document.querySelectorAll('#slidesContainer .slide').length;
         let autoSlideInterval;
         let isAutoPlaying = true;
         let userInteracting = false; // Add this flag to track user interaction
@@ -554,7 +554,6 @@
         function goToSlide(index) {
             const slidesContainer = document.getElementById('slidesContainer');
             const slideWidth = 100 / totalSlides;
-            
             currentSlideIndex = index;
             if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1;
             if (currentSlideIndex >= totalSlides) currentSlideIndex = 0;

@@ -142,14 +142,14 @@ header {
 
 .slides-container {
     display: flex;
-    width: 1200%; /* 25 slides × 100% */
+    width: 1800%; /* 25 slides × 100% */
     height: 100%;
     transition: transform 0.5s ease-in-out;
     will-change: transform; /* Optimize for smooth animations */
 }
 
 .slide {
-    width: 8.333%; /* 100% ÷ 25 slides */
+    width: 5.555%; /* 100% ÷ 25 slides */
     height: 100%;
     background-size: contain;
     background-position: center;
